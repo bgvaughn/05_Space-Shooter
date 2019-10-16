@@ -39,7 +39,7 @@ class Player(arcade.Sprite):
 
 class Enemy(arcade.Sprite):
     def __init__(self, x, y, mass, hp):
-        sprites = ['enemy_01', 'enemy_02', 'enemy_03', 'enemy_04', 'enemy_05', 'enemy_06', 'enemy_07', 'enemy_08', 'enemy_09']
+        sprites = ['enemy_01.png', 'enemy_02.png', 'enemy_03.png', 'enemy_04.png', 'enemy_05.png', 'enemy_06.png', 'enemy_07.png', 'enemy_08.png', 'enemy_09.png']
         sprites = random.choice(sprites)
         super().__init__("assets/{}.png".format(sprite), ENEMY_SCALE)
         self.center_x = x
