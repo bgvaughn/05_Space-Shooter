@@ -1,5 +1,5 @@
 #!/usr/local/env python3
-import sys, logging, os, open_color, arcade, assets
+import sys, logging, os, open_color, arcade, random
 
 version = (3,7)
 assert sys.version_info >= version, "This script requires at least Python {0}.{1}".format(version[0],version[1])
@@ -13,6 +13,10 @@ SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 SCREEN_TITLE = "The Space Between Us!"
 MARGIN = 50
+
+BULLET_SCALE = 0.5
+BULLET_DAMAGE = 10
+BULLET_SPEED = 10
 
 SHIP_HP = 100
 SHIP_SCALE = 0.5
@@ -39,9 +43,9 @@ class Player(arcade.Sprite):
 
 class Enemy(arcade.Sprite):
     def __init__(self, x, y, mass, hp):
-        sprites = ['enemy_01.png', 'enemy_02.png', 'enemy_03.png', 'enemy_04.png', 'enemy_05.png', 'enemy_06.png', 'enemy_07.png', 'enemy_08.png', 'enemy_09.png']
+        sprites = ['enemy_01', 'enemy_02', 'enemy_03', 'enemy_04', 'enemy_05', 'enemy_06', 'enemy_07', 'enemy_08', 'enemy_09']
         sprites = random.choice(sprites)
-        super().__init__("assets/{}.png".format(sprite), ENEMY_SCALE)
+        super().__init__("assets/{}.png".format(sprites), ENEMY_SCALE)
         self.center_x = x
         self.center_y = y
         self.hp = hp
@@ -53,10 +57,7 @@ class Enemy(arcade.Sprite):
         self.acceleration =ENEMY_ACCELERATION / self.mass
 
 class Window(arcade.Window):
-
     def __init__(self, width, height, title):
-
-        # Call the parent class's init function
         super().__init__(width, height, title)
         file_path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(file_path)
@@ -77,7 +78,7 @@ class Window(arcade.Window):
         self.hp = SHIP_HP
         
 
-        self.player = Player("assets/player.png", SHIP_SCALE,400,50)
+        self.player = Player("assets/player.png", SHIP_SCALE,SCREEN_WIDTH // 2,100)
         self.player_list.append(self.player)
         for e in range(NUM_ENEMIES):
             x = random.randint(MARGIN,SCREEN_WIDTH-MARGIN)
@@ -88,7 +89,10 @@ class Window(arcade.Window):
             self.enemy_List.append(enemy)
 
     def update(self, delta_time):
-        pass
+        self.player_list.update()
+        self.enemy_list.update()
+        self.bullet_list.update()
+        self.enemy_bullet_list.update()
 
     def on_draw(self):
         """ Called whenever we need to draw the window. """
@@ -103,13 +107,21 @@ class Window(arcade.Window):
 
     def on_mouse_motion(self, x, y, dx, dy):
         """ Called to update our objects. Happens approximately 60 times per second."""
-        pass
+        self.player_update_target(x,y)
+        
 
     def on_mouse_press(self, x, y, button, modifiers):
         """
         Called when the user presses a mouse button.
         """
-        pass
+        self.shoot_bullet()
+    def shoot_bullet(self):
+        image = "assets/bullet.png"
+        x = self.player.center_x
+        y = self.player.center_y + (self.playerheight // 2)
+        dy = BULLET_SPEED
+        bullet = Bullet(image, BULLET_SCALE, x, y, 0, dy, BULLET_DAMAGE)
+        self.bullet_list.append(bullet)
 
     def on_mouse_release(self, x, y, button, modifiers):
         """
@@ -135,7 +147,6 @@ class Window(arcade.Window):
 
 def main():
     window = Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    window.setup()
     arcade.run()
 
 
