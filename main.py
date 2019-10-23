@@ -129,23 +129,25 @@ class Window(arcade.Window):
         self.set_mouse_visible(True)
 
         arcade.set_background_color(open_color.black)
-        self.background = arcadee.load_texture("assets/space.jpg")
+        self.background = arcade.load_texture("assets/space.jfif")
 
         self.player_list = arcade.SpriteList()
         self.enemy_list = arcade.SpriteList()
         self.bullet_list = arcade.SpriteList()
         self.enemy_bullet_list = arcade.SpriteList()
 
-
-
-    def setup(self):
         self.player = True
         self.score = 0.0
         self.hp = SHIP_HP
+        self.playing = True
         
 
         self.player = Player("assets/player.png", SHIP_SCALE,SCREEN_WIDTH // 2, 100)
         self.player_list.append(self.player)
+
+
+
+    def setup(self):
         for e in range(NUM_ENEMIES):
             x = random.randint(MARGIN,SCREEN_WIDTH-MARGIN)
             y = random.randint(SCREEN_HEIGHT-ENEMY_MIN_Y,SCREEN_HEIGHT-MARGIN)
@@ -155,7 +157,7 @@ class Window(arcade.Window):
             self.enemy_List.append(enemy)
 
     def update(self, delta_time):
-        if self.playing
+        if self.playing:
             self.player_list.update()
             self.enemy_list.update()
             self.bullet_list.update()
@@ -191,7 +193,7 @@ class Window(arcade.Window):
         arcade.start_render()
         arcade.draw_texture_rectangle(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, SCREEN_WIDTH, SCREEN_HEIGHT, self.backround)
         if not self.playing:
-            arcade.draw_text("You've Done Well Challenger!!!", (SCREEN_WIDTH // 2) - 150, (SCREEN_HEIGHT // 2)  30, open_color.red_6, 50)
+            arcade.draw_text("You've Done Well Challenger!!!", (SCREEN_WIDTH // 2) - 150, (SCREEN_HEIGHT // 2) + 30, open_color.red_6, 50)
         else:
             self.player_list.draw()
             self.enemy_list.draw()
@@ -228,13 +230,12 @@ def shoot_bullet_enemy(self, enemy):
         bullet = Bullet(image, BULLET_SCALE, x, y, 0, dy, ENEMY_BULLET_DAMAGE)
         self.enemy_bullet_list.append(bullet)
 
-    def on_mouse_release(self, x, y, button, modifiers):
+def on_mouse_release(self, x, y, button, modifiers):
         """
         Called when a user releases a mouse button.
         """
-        pass
 
-    def on_key_press(self, key, modifiers):
+def on_key_press(self, key, modifiers):
         """ Called whenever the user presses a key. """
         if key == arcade.key.LEFT:
             print("Left")
@@ -245,7 +246,7 @@ def shoot_bullet_enemy(self, enemy):
         elif key == arcade.key.DOWN:
             print("Down")
 
-    def on_key_release(self, key, modifiers):
+def on_key_release(self, key, modifiers):
         """ Called whenever a user releases a key. """
         pass
 
